@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* สไตล์สำหรับ modal popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+
+        /* สไตล์ตาราง */
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            font-family: Tahoma, Geneva, Tahoma, sans-serif;
+            background-color: whitesmoke;
+            color: brown;
+        }
+        button {
+            background-color: yellow;
+        }
+        th {
+            color: black;
+        }
+        h1, h2 {
+            text-align: center;
+            font-family: Tahoma, Geneva, Tahoma, sans-serif;
+            
+        }
+        body {
+            
+            background-color: tomato;
+
+        }
+        .modal-content {
+            background-color: orange;
+        }
+        
+    </style>
+</head>
+<body>
+    <br>
+    <h1>การแข่งขันวอลเลย์บอล ระหว่างทีมA และทีมB</h1>
+    <h2>การแข่งขันวอลเลย์บอล คะแนน 25 แต้ม</h2>
+    <br>
+    <table>
+        <tr>
+            <th>ทีม</th>
+            <th>คะแนน</th>
+            <th>เพิ่มคะแนน</th>
+            <th>ลดคะแนน</th>
+        </tr>
+        <tr>
+            <td>ทีม A</td>
+            <td id="scoreA">0</td>
+            <td><button onclick="increaseScore('A')">เพิ่มคะแนน</button></td>
+            <td><button onclick="decreaseScore('A')">ลดคะแนน</button></td>
+        </tr>
+        <tr>
+            <td>ทีม B</td>
+            <td id="scoreB">0</td>
+            <td><button onclick="increaseScore('B')">เพิ่มคะแนน</button></td>
+            <td><button onclick="decreaseScore('B')">ลดคะแนน</button></td>
+        </tr>
+        
+    </table>
+    <h1>การแข่งขันวอลเลย์บอล ระหว่างทีมC และทีมD</h1>
+    <h2>การแข่งขันวอลเลย์บอล คะแนน 25 แต้ม</h2>
+    <br>
+    <table>
+        <tr>
+            <th>ทีม</th>
+            <th>คะแนน</th>
+            <th>เพิ่มคะแนน</th>
+            <th>ลดคะแนน</th>
+        </tr>
+        <tr>
+            <td>ทีม C</td>
+            <td id="scoreC">0</td>
+            <td><button onclick="increaseScore('C')">เพิ่มคะแนน</button></td>
+            <td><button onclick="decreaseScore('C')">ลดคะแนน</button></td>
+        </tr>
+        <tr>
+            <td>ทีม D</td>
+            <td id="scoreD">0</td>
+            <td><button onclick="increaseScore('D')">เพิ่มคะแนน</button></td>
+            <td><button onclick="decreaseScore('D')">ลดคะแนน</button></td>
+        </tr>
+        
+    </table>
+
+
+    <!-- โมดอลสำหรับสรุปผล -->
+    <div id="summaryModal" class="modal">
+        <div class="modal-content">
+            <h2>สรุปผลคะแนน</h2>
+            <h3 id="winner">ทีมที่ชนะ: </h3>
+            <button id="resetButton" onclick="resetScores()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let intervalId = null;
+
+        function increaseScore(team) {
+            const scoreElement = document.getElementById(`score${team}`);
+            let currentScore = parseInt(scoreElement.innerText);
+            currentScore++;
+            scoreElement.innerText = currentScore;
+
+            // ตรวจสอบชนะ
+            if (currentScore >= 25) {
+                const winner = document.getElementById('winner');
+                winner.innerText = `ยินดีด้วยทีม ${team} ชนะ!!`;
+                showSummary();
+                startResetTimer();
+            }
+        }
+
+        function decreaseScore(team) {
+            const scoreElement = document.getElementById(`score${team}`);
+            let currentScore = parseInt(scoreElement.innerText);
+            currentScore--;
+            if (currentScore < 0) {
+                currentScore = 0;
+            }
+            scoreElement.innerText = currentScore;
+        }
+
+        function showSummary() {
+            // แสดงโมดอลสรุปผล
+            const summaryModal = document.getElementById('summaryModal');
+            summaryModal.style.display = 'block';
+        }
+
+        function startResetTimer() {
+            // เริ่มต้นตัวจับเวลาเพื่อรีเซ็ตคะแนนอัตโนมัติหลังจาก 3 วินาที
+            intervalId = setInterval(resetScores, 3000);
+        }
+
+        function resetScores() {
+            // รีเซ็ตคะแนน
+            document.getElementById('scoreA').innerText = '0';
+            document.getElementById('scoreB').innerText = '0';
+            document.getElementById('scoreC').innerText = '0';
+            document.getElementById('scoreD').innerText = '0';
+
+            // หยุดตัวจับเวลา
+            clearInterval(intervalId);
+
+            // ซ่อนโมดอล
+            const summaryModal = document.getElementById('summaryModal');
+            summaryModal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
